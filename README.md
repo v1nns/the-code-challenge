@@ -1,4 +1,4 @@
-# the-coding-challenge
+# the-code-challenge
 
 This a full stack web application using React, Node.js, Express and Webpack to develop a Coding Platform with different challenges.
 
