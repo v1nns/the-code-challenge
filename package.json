@@ -13,9 +13,13 @@
   "author": "Sandeep Raveesh",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^4.8.3",
+    "ace-builds": "^1.4.7",
     "babel-polyfill": "^6.26.0",
     "express": "^4.16.3",
     "react": "^16.5.2",
+    "react-ace": "^8.0.0",
+    "react-component-console": "^1.1.1",
     "react-dom": "^16.5.2"
   },
   "devDependencies": {
