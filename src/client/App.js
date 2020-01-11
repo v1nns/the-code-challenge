@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./app.css";
 
-import Editor from "./components/Editor"
+import Editor from "./components/Editor";
 
 export default class App extends Component {
   state = { username: null };
@@ -13,8 +13,6 @@ export default class App extends Component {
   }
 
   render() {
-    return (
-      <Editor/>
-    );
+    return <Editor />;
   }
 }
