@@ -1,35 +1,101 @@
 const HttpStatus = require("http-status-codes");
-var spawn = require("child_process").spawn;
+const fs = require("fs");
+const exec = require("child_process").exec;
+const spawn = require("child_process").spawn;
 
-const compileProgram = async (req, res, next) => {
+/***************************** Private functions ******************************/
+
+/**
+ * Compile source code received as parameter
+ */
+async function compileCode(language, code) {
+  /* Save source code to a file */
+  let filename = "code-challenge";
+  let completePath = `/tmp/${filename}.${language}`;
+  fs.writeFileSync(completePath, code);
+
+  /* Compile source code */
+  const child = spawn("g++", [`${completePath}`, `-o/tmp/${filename}`]);
+
+  /* Get error from compiler */
+  let result = "";
+  for await (const chunk of child.stderr) {
+    result += chunk;
+  }
+
+  /* Check if executed with success */
+  const errorCompile = await new Promise((resolve, reject) => {
+    child.on("close", resolve);
+  });
+
+  return { errorCompile, result };
+}
+
+/**
+ * Executed the program compiled before
+ */
+async function executeProgram() {
+  let filename = "/tmp/code-challenge";
+
+  /* Execute program */
+  const { errorExecute, stdout, stderr } = await new Promise(
+    (resolve, reject) => {
+      exec(filename, (errorExecute, stdout, stderr) =>
+        resolve({ errorExecute, stdout, stderr })
+      );
+    }
+  );
+
+  /* Delete the program file */
+  fs.unlinkSync(filename);
+
+  return { errorExecute, stdout, stderr };
+}
+
+/****************************** Public functions ******************************/
+
+const compileAndExecuteProgram = async (req, res, next) => {
   try {
-    const { language, sourceCode } = req.body;
+    const language = req.params.language;
+    const sourceCode = req.body;
 
+    /* Check if the language informed is supported */
     if (language !== "cpp") {
       return res.status(HttpStatus.BAD_REQUEST).json({
-        code: "BAD_REQUEST_ERROR",
         description: "Programming language not supported"
       });
     }
 
-    return res.status(HttpStatus.NOT_IMPLEMENTED).json({
-      message: "Service not implemented",
-      data: "result null"
-    });
+    /* Save the source code to a file and compile it */
+    const { errorCompile, result } = await compileCode(language, sourceCode);
 
-    // TODO: implementation
-    // return res.status(HttpStatus.OK).json({
-    //   message: "Program compiled with success",
-    //   data: "result null"
-    // });
-  } catch (error) {
+    if (errorCompile) {
+      /* return the error result */
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        description: result
+      });
+    } else {
+      /* Execute the program and return the result */
+      const { errorExecute, stdout, stderr } = await executeProgram();
+
+      if (errorExecute) {
+        //TODO: return error
+      } else {
+        return res.status(HttpStatus.OK).json({
+          data: {
+            stdout: stdout,
+            stderr: stderr
+          }
+        });
+      }
+    }
+  } catch (err) {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      code: "SERVER_ERROR",
-      description: "something went wrong, please try again"
+      description: "Something went wrong, please try again"
     });
   }
 };
 
 module.exports = {
-  compileProgram: compileProgram
+  compileAndExecuteProgram: compileAndExecuteProgram
 };

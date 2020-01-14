@@ -7,6 +7,7 @@ let routes = require("./routes");
 /* Express configurations */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.text());
 app.use(express.static("dist"));
 
 /* Dummy API to check if server is running OK */

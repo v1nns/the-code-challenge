@@ -5,6 +5,6 @@ let router = express.Router();
 const compilerService = require("../services/compiler");
 
 /* Router */
-router.post("/", compilerService.compileProgram);
+router.post("/:language", compilerService.compileAndExecuteProgram);
 
 module.exports = router;
