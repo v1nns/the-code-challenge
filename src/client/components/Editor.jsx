@@ -29,12 +29,53 @@ const terminal = {
 
 /* Class implementation */
 export default class Editor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { code: "", output: [""] };
+
+    // Bind functions
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleEditorChange(newValue) {
+    this.setState({ code: newValue });
+  }
+
+  handleClick() {
+    if (this.state.code !== "") {
+      /* Clean the terminal output */
+      this.setState({ output: [""] });
+
+      /* API Request */
+      fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
+        .then(response => response.json())
+        .then(result => {
+          /* Check if compiled with success */
+          if ("error" in result) {
+            this.setState({
+              output: ["Compile error:", result.error.description]
+            });
+          } else {
+            const data = result.data;
+
+            /* Check if there is any error in stderr */
+            if (data.stderr !== "") {
+              this.setState({ output: ["Output error:", data.stderr] });
+            } else {
+              this.setState({ output: ["Output:", data.stdout] });
+            }
+          }
+        });
+    }
+  }
+
   render() {
+    const output = this.state.output;
     return (
-      <div style={{ height: "100vh" }}>
+      <div style={{ height: "100vh", maxHeight: "100vh", overflow: "hidden" }}>
         <AppBar position="static">
           <Toolbar style={toolbar}>
-            <Grid justify="space-between" container spacing={24}>
+            <Grid justify="space-between" container spacing={10}>
               <Grid item>
                 <Typography variant="h6" color="inherit">
                   Question 1
@@ -43,7 +84,7 @@ export default class Editor extends Component {
 
               <Grid item>
                 <div>
-                  <Button raised color="inherit">
+                  <Button color="inherit" onClick={this.handleClick}>
                     Run
                   </Button>
                 </div>
@@ -52,7 +93,12 @@ export default class Editor extends Component {
           </Toolbar>
         </AppBar>
 
-        <Grid container style={{ height: "calc(100% - 36px)" }}>
+        <Grid
+          container
+          style={{
+            height: "calc(100% - 36px)"
+          }}
+        >
           <Grid item xs={7}>
             <div style={editor}>
               <AceEditor
@@ -65,16 +111,36 @@ export default class Editor extends Component {
                 setOptions={{
                   highlightActiveLine: false,
                   highlightGutterLine: false,
-                  spellcheck: true,
                   printMargin: false
                 }}
+                onChange={newValue => {
+                  this.handleEditorChange(newValue);
+                }}
+                value={this.state.code}
               />
             </div>
           </Grid>
 
           <Grid item xs={5}>
             <div style={terminal}>
-              <Console lines={[""]} console={{ append: true }} />
+              <Console
+                lines={output}
+                console={{
+                  append: true,
+                  typing: {
+                    char: {
+                      avgMs: 10, // average time to write a character
+                      deviation: 0.1, // deviate typing delay
+                      minMs: 5 // take at least to write a character
+                    },
+                    line: {
+                      avgMs: 100, // average delay between lines
+                      deviation: 0.1, // deviate line delay
+                      minMs: 50 // delay at least to between lines
+                    }
+                  }
+                }}
+              />
             </div>
           </Grid>
         </Grid>

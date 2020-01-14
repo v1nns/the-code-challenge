@@ -62,7 +62,9 @@ const compileAndExecuteProgram = async (req, res, next) => {
     /* Check if the language informed is supported */
     if (language !== "cpp") {
       return res.status(HttpStatus.BAD_REQUEST).json({
-        description: "Programming language not supported"
+        error: {
+          description: "Programming language not supported"
+        }
       });
     }
 
@@ -72,14 +74,21 @@ const compileAndExecuteProgram = async (req, res, next) => {
     if (errorCompile) {
       /* return the error result */
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        description: result
+        error: {
+          description: result
+        }
       });
     } else {
       /* Execute the program and return the result */
       const { errorExecute, stdout, stderr } = await executeProgram();
 
       if (errorExecute) {
-        //TODO: return error
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          error: {
+            description:
+              "Error while trying to execute the compiled source code"
+          }
+        });
       } else {
         return res.status(HttpStatus.OK).json({
           data: {
@@ -90,6 +99,7 @@ const compileAndExecuteProgram = async (req, res, next) => {
       }
     }
   } catch (err) {
+    console.log("Unknown error:", err);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       description: "Something went wrong, please try again"
     });
