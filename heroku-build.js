@@ -22,7 +22,7 @@ if (
 
     console.time("build");
     console.log("starting npm build");
-    ChildProcess.execSync(`npm run build:all`);
+    ChildProcess.execSync(`npm run build`);
     console.timeEnd("build");
 
     console.time("uninstall");
