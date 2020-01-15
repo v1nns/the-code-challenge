@@ -4,6 +4,7 @@
   "description": "Full stack web application to compile programs using React, Node.js, Express and Webpack.",
   "main": "src/server/app.js",
   "scripts": {
+    "heroku-prebuild": "npm install --dev",
     "build": "webpack --mode production",
     "start": "npm run build && node src/server/app.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
