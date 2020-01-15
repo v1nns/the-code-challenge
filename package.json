@@ -10,7 +10,6 @@
     "server": "nodemon src/server/app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha --exit src/server/**/*.js",
-    "postinstall": "node ./heroku-build.js"
   },
   "author": "Vinicius M. Longaray",
   "license": "ISC",
