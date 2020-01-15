@@ -4,8 +4,6 @@ This a full stack web application using React, Node.js, Express and Webpack to d
 
 - [the-coding-challenge](#the-coding-challenge)
   - [Introduction](#introduction)
-    - [Development mode](#development-mode)
-    - [Production mode](#production-mode)
   - [Quick Start](#quick-start)
 
 ## Introduction
