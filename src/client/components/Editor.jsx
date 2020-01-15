@@ -48,29 +48,28 @@ export default class Editor extends Component {
 
       /* API Request */
       fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
-        .then(response => {
-          if (!response.ok) {
+        .then(response => response.json())
+        .then(result => {
+          if (result !== undefined) {
+            /* Check if compiled with success */
+            if ("error" in result) {
+              this.setState({
+                output: ["Compile error:", result.error.description]
+              });
+            } else {
+              const data = result.data;
+
+              /* Check if there is any error in stderr */
+              if (data.stderr !== "") {
+                this.setState({ output: ["Output error:", data.stderr] });
+              } else {
+                this.setState({ output: ["Output:", data.stdout] });
+              }
+            }
+          } else {
             this.setState({
               output: ["Error:", "Service unavailable"]
             });
-            throw new Error(response.status);
-          } else return response.json();
-        })
-        .then(result => {
-          /* Check if compiled with success */
-          if ("error" in result) {
-            this.setState({
-              output: ["Compile error:", result.error.description]
-            });
-          } else {
-            const data = result.data;
-
-            /* Check if there is any error in stderr */
-            if (data.stderr !== "") {
-              this.setState({ output: ["Output error:", data.stderr] });
-            } else {
-              this.setState({ output: ["Output:", data.stdout] });
-            }
           }
         });
     }

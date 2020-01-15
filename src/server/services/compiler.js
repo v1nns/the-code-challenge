@@ -8,22 +8,22 @@ const spawn = require("child_process").spawn;
 /**
  * Compile source code received as parameter
  */
-async function compileCode(language, code) {
+async function compileCode(languageSuffix, code) {
   /* Save source code to a file */
   let filename = "code-challenge";
-  let completePath;
+  let path;
 
   /* Check if it is running on Heroku */
   if (!process.env.HEROKU) {
-    completePath = `/tmp/${filename}.${language}`;
+    path = `/tmp/${filename}`;
   } else {
-    completePath = `/app/${filename}.${language}`;
+    path = `/app/${filename}`;
   }
 
-  fs.writeFileSync(completePath, code);
+  fs.writeFileSync(`${path}.${languageSuffix}`, code);
 
   /* Compile source code */
-  const child = spawn("g++", [`${completePath}`, `-o/tmp/${filename}`]);
+  const child = spawn("g++", [`${path}.${languageSuffix}`, `-o${path}`]);
 
   /* Get error from compiler */
   let result = "";
