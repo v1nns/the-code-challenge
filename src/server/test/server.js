@@ -17,7 +17,6 @@ describe("Rest API Server", function() {
       request.get(base_url, function(error, response, body) {
         //expect(body).toBe("App is working");
         assert.equal("App is working", body);
-        app.closeServer();
         done();
       });
     });

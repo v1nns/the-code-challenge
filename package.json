@@ -9,7 +9,7 @@
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha src/server/**/*.js"
+    "test": "mocha --exit src/server/**/*.js"
   },
   "author": "Vinicius M. Longaray",
   "license": "ISC",
