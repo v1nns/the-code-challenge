@@ -2,10 +2,6 @@
 
 This a full stack web application using React, Node.js, Express and Webpack to develop a Coding Platform with different challenges.
 
-- [the-coding-challenge](#the-coding-challenge)
-  - [Introduction](#introduction)
-  - [Quick Start](#quick-start)
-
 ## Introduction
 
 This is a full stack [React](https://reactjs.org/) application with a [Node.js](https://nodejs.org/en/) and [Express](https://expressjs.com/) backend. Client side code is written in React and the backend API is written using Express. This application is configured with [Airbnb's ESLint rules](https://github.com/airbnb/javascript) and formatted through [prettier](https://prettier.io/).
