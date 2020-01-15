@@ -1,0 +1,4 @@
+# Build a Docker image able to run the whole project
+build:
+    docker:
+      web: Dockerfile
