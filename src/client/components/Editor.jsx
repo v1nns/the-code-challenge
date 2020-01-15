@@ -50,10 +50,10 @@ export default class Editor extends Component {
       fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
         .then(response => {
           if (!response.ok) {
-            // throw new Error(response.status);
             this.setState({
               output: ["Error:", "Service unavailable"]
             });
+            throw new Error(response.status);
           } else return response.json();
         })
         .then(result => {
