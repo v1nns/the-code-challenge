@@ -11,7 +11,15 @@ const spawn = require("child_process").spawn;
 async function compileCode(language, code) {
   /* Save source code to a file */
   let filename = "code-challenge";
-  let completePath = `/tmp/${filename}.${language}`;
+  let completePath;
+
+  /* Check if it is running on Heroku */
+  if (!process.env.HEROKU) {
+    completePath = `/tmp/${filename}.${language}`;
+  } else {
+    completePath = `/app/${filename}.${language}`;
+  }
+
   fs.writeFileSync(completePath, code);
 
   /* Compile source code */
@@ -35,7 +43,14 @@ async function compileCode(language, code) {
  * Executed the program compiled before
  */
 async function executeProgram() {
-  let filename = "/tmp/code-challenge";
+  let filename;
+
+  /* Check if it is running on Heroku */
+  if (!process.env.HEROKU) {
+    filename = "/tmp/code-challenge";
+  } else {
+    filename = "/app/code-challenge";
+  }
 
   /* Execute program */
   const { errorExecute, stdout, stderr } = await new Promise(
