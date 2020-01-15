@@ -50,21 +50,18 @@ export default class Editor extends Component {
       fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
         .then(response => response.json())
         .then(result => {
-          if (result !== undefined) {
-            /* Check if compiled with success */
-            if ("error" in result) {
-              this.setState({
-                output: ["Compile error:", result.error.description]
-              });
-            } else {
-              const data = result.data;
-
+          if ("error" in result) {
+            /* Check if found error while trying to compile */
+            this.setState({
+              output: ["Compile error:", result.error.description]
+            });
+          } else if ("data" in result) {
+            const data = result.data;
+            if (data.stderr !== "") {
               /* Check if there is any error in stderr */
-              if (data.stderr !== "") {
-                this.setState({ output: ["Output error:", data.stderr] });
-              } else {
-                this.setState({ output: ["Output:", data.stdout] });
-              }
+              this.setState({ output: ["Output error:", data.stderr] });
+            } else {
+              this.setState({ output: ["Output:", data.stdout] });
             }
           } else {
             this.setState({
