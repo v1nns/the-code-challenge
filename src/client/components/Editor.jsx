@@ -48,7 +48,14 @@ export default class Editor extends Component {
 
       /* API Request */
       fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            // throw new Error(response.status);
+            this.setState({
+              output: ["Error:", "Service unavailable"]
+            });
+          } else return response.json();
+        })
         .then(result => {
           /* Check if compiled with success */
           if ("error" in result) {
@@ -78,7 +85,7 @@ export default class Editor extends Component {
             <Grid justify="space-between" container spacing={10}>
               <Grid item>
                 <Typography variant="h6" color="inherit">
-                  Question 1
+                  code challenge
                 </Typography>
               </Grid>
 
