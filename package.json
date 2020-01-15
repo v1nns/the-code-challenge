@@ -1,16 +1,17 @@
 {
-  "name": "simple-react-full-stack",
+  "name": "the-code-challenge",
   "version": "1.0.0",
-  "description": "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
+  "description": "Full stack web application to compile programs using React, Node.js, Express and Webpack.",
   "main": "src/server/app.js",
   "scripts": {
     "build": "webpack --mode production",
     "start": "npm run build && node src/server/app.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/app.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "mocha src/server/**/*.js"
   },
-  "author": "Sandeep Raveesh",
+  "author": "Vinicius M. Longaray",
   "license": "ISC",
   "dependencies": {
     "@material-ui/core": "^4.8.3",
@@ -23,7 +24,8 @@
     "react": "^16.12.0",
     "react-ace": "^8.0.0",
     "react-component-console": "^1.1.1",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

@@ -16,6 +16,10 @@ app.get("/", (req, res) => res.send("App is working"));
 /* Routes API */
 app.use("/api", routes);
 
-app.listen(process.env.PORT || 8080, () =>
+var server = app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
+
+module.exports.closeServer = function() {
+  server.close();
+};
