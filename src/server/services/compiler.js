@@ -17,7 +17,13 @@ async function compileCode(languageSuffix, code) {
   if (!process.env.HEROKU) {
     path = `/tmp/${filename}`;
   } else {
-    path = `/app/${filename}`;
+    /* Create a tmp dir inside the server directory */
+    var dir = "./tmp";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    path = `${dir}/${filename}`;
   }
 
   fs.writeFileSync(`${path}.${languageSuffix}`, code);
@@ -49,7 +55,7 @@ async function executeProgram() {
   if (!process.env.HEROKU) {
     filename = "/tmp/code-challenge";
   } else {
-    filename = "/app/code-challenge";
+    filename = "./code-challenge";
   }
 
   /* Execute program */

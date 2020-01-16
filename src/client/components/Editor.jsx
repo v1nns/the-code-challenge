@@ -75,7 +75,7 @@ export default class Editor extends Component {
           }
         } catch (error) {
           this.setState({
-            output: ["Error:", error]
+            output: [error]
           });
         }
       };
