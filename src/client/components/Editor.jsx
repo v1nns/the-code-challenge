@@ -47,28 +47,38 @@ export default class Editor extends Component {
       this.setState({ output: [""] });
 
       /* API Request */
-      fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
-        .then(response => response.json())
-        .then(result => {
-          if ("error" in result) {
-            /* Check if found error while trying to compile */
-            this.setState({
-              output: ["Compile error:", result.error.description]
-            });
-          } else if ("data" in result) {
-            const data = result.data;
-            if (data.stderr !== "") {
-              /* Check if there is any error in stderr */
-              this.setState({ output: ["Output error:", data.stderr] });
+      try {
+        fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
+          .then(response => {
+            if (response.status === 503) {
+              throw new Error("Service unavailable");
             } else {
-              this.setState({ output: ["Output:", data.stdout] });
+              return response.json();
             }
-          } else {
-            this.setState({
-              output: ["Error:", "Service unavailable"]
-            });
-          }
+          })
+          .then(result => {
+            if ("error" in result) {
+              /* Check if found error while trying to compile */
+              this.setState({
+                output: ["Compile error:", result.error.description]
+              });
+            } else if ("data" in result) {
+              const data = result.data;
+              if (data.stderr !== "") {
+                /* Check if there is any error in stderr */
+                this.setState({ output: ["Output error:", data.stderr] });
+              } else {
+                this.setState({ output: ["Output:", data.stdout] });
+              }
+            } else {
+              throw new Error("Service unavailable");
+            }
+          });
+      } catch (error) {
+        this.setState({
+          output: ["Error:", error]
         });
+      }
     }
   }
 
