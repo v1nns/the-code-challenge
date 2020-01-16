@@ -46,39 +46,41 @@ export default class Editor extends Component {
       /* Clean the terminal output */
       this.setState({ output: [""] });
 
-      /* API Request */
-      try {
-        fetch("/api/v1/compiler/cpp", { method: "POST", body: this.state.code })
-          .then(response => {
-            if (response.status === 503) {
-              throw new Error("Service unavailable");
+      var runProgram = async () => {
+        /* API Request - this try block will encapsulate the fetch logic, and
+        capture all errors that can be thrown */
+        try {
+          var url = "/api/v1/compiler/cpp";
+          var options = { method: "POST", body: this.state.code };
+          const response = await fetch(url, options);
+
+          const json = await response.json();
+
+          /* Check if found error while trying to compile */
+          if ("error" in json) {
+            this.setState({
+              output: ["Compile error:", json.error.description]
+            });
+          } else if ("data" in json) {
+            const data = json.data;
+
+            /* Check if there is any error in stderr */
+            if (data.stderr !== "") {
+              this.setState({ output: ["Output error:", data.stderr] });
             } else {
-              return response.json();
+              this.setState({ output: ["Output:", data.stdout] });
             }
-          })
-          .then(result => {
-            if ("error" in result) {
-              /* Check if found error while trying to compile */
-              this.setState({
-                output: ["Compile error:", result.error.description]
-              });
-            } else if ("data" in result) {
-              const data = result.data;
-              if (data.stderr !== "") {
-                /* Check if there is any error in stderr */
-                this.setState({ output: ["Output error:", data.stderr] });
-              } else {
-                this.setState({ output: ["Output:", data.stdout] });
-              }
-            } else {
-              throw new Error("Service unavailable");
-            }
+          } else {
+            throw new Error("Service unavailable");
+          }
+        } catch (error) {
+          this.setState({
+            output: ["Error:", error]
           });
-      } catch (error) {
-        this.setState({
-          output: ["Error:", error]
-        });
-      }
+        }
+      };
+
+      runProgram();
     }
   }
 
