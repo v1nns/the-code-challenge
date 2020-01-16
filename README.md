@@ -1,7 +1,5 @@
 # the-code-challenge
 
-<a target="_blank" href="https://the-code-challenge.herokuapp.com/"><img alt="DEMO" src="https://img.shields.io/website-up-down-green-red/http/the-code-challenge.herokuapp.com.svg"></a>
-
 This a full stack web application using React, Node.js, Express and Webpack to develop a Coding Platform with different challenges.
 
 <a href="https://the-code-challenge.herokuapp.com/">DEMO</a>
@@ -22,14 +20,8 @@ git clone https://github.com/v1nns/the-coding-challenge
 cd the-coding-challenge
 
 # Install dependencies
-yarn (or npm install)
+npm install
 
 # Start development server
-yarn dev (or npm run dev)
-
-# Build for production
-yarn build (or npm run build)
-
-# Start production server
-yarn start (or npm start)
+npm run dev
 ```
