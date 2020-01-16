@@ -55,7 +55,7 @@ async function executeProgram() {
   if (!process.env.HEROKU) {
     filename = "/tmp/code-challenge";
   } else {
-    filename = "./code-challenge";
+    filename = "./tmp/code-challenge";
   }
 
   /* Execute program */
