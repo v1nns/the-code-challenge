@@ -1,6 +1,12 @@
 # the-code-challenge
 
+<a target="_blank" href="https://the-code-challenge.herokuapp.com/"><img alt="DEMO" src="https://img.shields.io/website-up-down-green-red/http/the-code-challenge.herokuapp.com.svg"></a>
+
 This a full stack web application using React, Node.js, Express and Webpack to develop a Coding Platform with different challenges.
+
+<a href="https://the-code-challenge.herokuapp.com/">DEMO</a>
+
+<i>Obs.: Currently only runs C++ programs! </i>
 
 ## Introduction
 
