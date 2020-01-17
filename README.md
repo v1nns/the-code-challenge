@@ -1,6 +1,6 @@
 # the-code-challenge
 
-This a full stack web application using React, Node.js, Express and Webpack to develop a Coding Platform with different challenges.
+A Coding Platform with different challenges to solve, still at the development stage.
 
 <a href="https://the-code-challenge.herokuapp.com/">DEMO</a>
 
